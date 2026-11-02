@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #ffffff;
+  color: #161616;
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+}
+
+.font-serif-display {
+  font-family: "Newsreader", Georgia, serif;
+  font-optical-sizing: auto;
+}
+
+.cover-fade {
+  animation: cover-fade 700ms ease;
+}
+
+@keyframes cover-fade {
+  from {
+    opacity: 0.35;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+textarea {
+  resize: vertical;
+}
