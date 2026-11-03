@@ -3,8 +3,14 @@ import express, { NextFunction, Request, Response } from "express";
 import fs from "fs";
 import path from "path";
 import { connectDB } from "./config/db";
+import adminRouter from "./router/admin.router";
 import aiRouter from "./router/ai.router";
 import authRouter from "./router/auth.router";
+import categoryRouter from "./router/category.router";
+import commentRouter from "./router/comment.router";
+import postRouter from "./router/post.router";
+import reportRouter from "./router/report.router";
+import tagRouter from "./router/tag.router";
 import userRouter from "./router/user.router";
 import { errorResponse } from "./utils/response.helper";
 
@@ -20,13 +26,24 @@ app.get("/api/health", (_req, res) => {
 app.use("/api/ai", aiRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
+app.use("/api/categories", categoryRouter);
+app.use("/api/tags", tagRouter);
+app.use("/api/posts", postRouter);
+app.use("/api/comments", commentRouter);
+app.use("/api/reports", reportRouter);
+app.use("/api/admin", adminRouter);
 
-app.use((error: unknown, _req: Request, res: Response, next: NextFunction) => {
+app.use("/api", (_req, res) => {
+  res.status(404).json(errorResponse("Route not found"));
+});
+
+app.use((error: unknown, _req: Request, res: Response, _next: NextFunction) => {
   if (error instanceof SyntaxError) {
     res.status(400).json(errorResponse("Request body must be valid JSON"));
     return;
   }
-  next(error);
+  console.error("Unhandled error:", error instanceof Error ? error.message : error);
+  res.status(500).json(errorResponse("Something went wrong on the server"));
 });
 
 const clientPath = path.resolve(__dirname, "../../reactapp/dist");

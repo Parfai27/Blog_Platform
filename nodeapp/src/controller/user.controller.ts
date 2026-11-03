@@ -1,13 +1,55 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 import { cloudinaryReady } from "../config/cloudinary";
+import { Post } from "../model/post.model";
 import { User } from "../model/user.model";
 import { deleteAvatar, uploadAvatar } from "../services/avatar.service";
+import { databaseReady } from "../utils/db.helper";
 import { errorResponse, successResponse } from "../utils/response.helper";
 import { publicUser } from "../utils/user.helper";
 
 // undefined means the field was not sent, so it stays unchanged.
 const readOptional = (value: unknown) => (typeof value === "string" ? value.trim() : undefined);
+
+// The public author page. No email here; their posts come from GET /api/posts?author=<id>.
+export const getProfile = async (req: Request, res: Response) => {
+  try {
+    if (!databaseReady(res)) return;
+
+    const id = String(req.params.id);
+    if (!mongoose.isValidObjectId(id)) {
+      return res.status(404).json(errorResponse("Author not found"));
+    }
+
+    const user = await User.findById(id).select("firstName lastName bio avatar createdAt");
+    if (!user) {
+      return res.status(404).json(errorResponse("Author not found"));
+    }
+
+    const [stats] = await Post.aggregate<{ postCount: number; likeCount: number }>([
+      { $match: { author: user._id, status: "published" } },
+      { $group: { _id: null, postCount: { $sum: 1 }, likeCount: { $sum: "$likeCount" } } },
+    ]);
+
+    return res.status(200).json(
+      successResponse({
+        author: {
+          id: user._id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          bio: user.bio ?? "",
+          avatar: user.avatar?.url ?? "",
+          joinedAt: (user as unknown as { createdAt?: Date }).createdAt ?? null,
+          postCount: stats?.postCount ?? 0,
+          likeCount: stats?.likeCount ?? 0,
+        },
+      }),
+    );
+  } catch (error) {
+    console.error("Load author failed:", error instanceof Error ? error.message : error);
+    return res.status(500).json(errorResponse("Could not load the author"));
+  }
+};
 
 export const updateMe = async (req: Request, res: Response) => {
   let uploadedId = "";

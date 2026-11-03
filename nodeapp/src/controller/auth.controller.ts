@@ -181,14 +181,19 @@ export const forgotPassword = async (req: Request, res: Response) => {
       } catch (error) {
         console.error("Reset email failed:", error instanceof Error ? error.message : error);
       }
+    } else {
+      console.error("Reset email not sent: set SENDGRID_API_KEY and EMAIL_FROM.");
     }
 
     const showCode = devResetCodeEnabled();
-    if (!emailed && !showCode) {
-      user.resetCode = undefined;
-      user.resetCodeExpiration = undefined;
-      await user.save();
-      return res.status(500).json(errorResponse("Could not send the reset email"));
+    if (!emailed) {
+      // The code was never delivered, so nobody can use it. The reply stays the same
+      // as for an unknown email, so it never tells anyone which emails are registered.
+      if (!showCode) {
+        user.resetCode = undefined;
+        user.resetCodeExpiration = undefined;
+        await user.save();
+      }
     }
 
     return res.status(200).json({

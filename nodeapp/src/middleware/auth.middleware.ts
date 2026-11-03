@@ -127,3 +127,16 @@ export const requireAdmin = (req: Request, res: Response, next: NextFunction) =>
 
   next();
 };
+
+// For routes that save something under the user's id (posts, comments, likes).
+// The dev session has no account, so it is turned away here.
+export const requireAccount = (req: Request, res: Response, next: NextFunction) => {
+  if (!mongoose.isValidObjectId(req.user?.userId ?? "")) {
+    return res.status(403).json({
+      success: false,
+      message: "Log in with a real account to do this.",
+    });
+  }
+
+  next();
+};

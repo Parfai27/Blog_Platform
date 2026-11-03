@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import { DEV_USER_ID, devSessionEnabled } from "../config/devFlags";
 import { Tag } from "../model/tag.model";
+import { ensureDevAccount } from "../services/devAccount.service";
 import { AiInputError, AiUnavailableError, assertConfigured, mockAiEnabled } from "../services/llm.service";
 import {
   assertDraft,
@@ -45,7 +46,7 @@ const storedTags = async () => {
   return tags.map((tag) => tag.name);
 };
 
-export const devSession = (req: Request, res: Response) => {
+export const devSession = async (req: Request, res: Response) => {
   if (!devSessionEnabled()) {
     return res.status(404).json(errorResponse("Not found"));
   }
@@ -55,9 +56,18 @@ export const devSession = (req: Request, res: Response) => {
     return res.status(500).json(errorResponse("The server is missing JWT_SECRET"));
   }
 
-  const user = { userId: DEV_USER_ID, role: "author" as const };
-  const token = jwt.sign(user, secret, { expiresIn: "12h" });
-  return res.json(successResponse({ token, user }));
+  try {
+    // With a database, sign in as a real dev account so posts can be saved.
+    // Without one, fall back to an account-less token that only reaches the AI routes.
+    const userId =
+      mongoose.connection.readyState === 1 ? String((await ensureDevAccount())._id) : DEV_USER_ID;
+    const user = { userId, role: "author" as const };
+    const token = jwt.sign(user, secret, { expiresIn: "12h" });
+    return res.json(successResponse({ token, user }));
+  } catch (error) {
+    console.error("Dev session failed:", error instanceof Error ? error.message : error);
+    return res.status(500).json(errorResponse("Could not start the dev session"));
+  }
 };
 
 export const usage = async (req: Request, res: Response) => {

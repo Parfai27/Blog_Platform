@@ -7,7 +7,10 @@
   "scripts": {
     "dev": "nodemon --exec ts-node src/server.ts",
     "start": "ts-node --transpile-only src/server.ts",
-    "test:ai": "ts-node --transpile-only src/scripts/test-ai-drafts.ts"
+    "test:ai": "ts-node --transpile-only src/scripts/test-ai-drafts.ts",
+    "make-admin": "ts-node --transpile-only src/scripts/make-admin.ts",
+    "seed:categories": "ts-node --transpile-only src/scripts/seed-categories.ts",
+    "seed:sample": "ts-node --transpile-only src/scripts/seed-sample.ts"
   },
   "engines": {
     "node": ">=20"
