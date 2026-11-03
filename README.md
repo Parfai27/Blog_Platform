@@ -2,7 +2,7 @@
 
 Open Margin, a community blog. Express + TypeScript + MongoDB API in `nodeapp/`, React + Vite frontend in `reactapp/`.
 
-The database design is in `Open-Margin-Database-Schema.pdf`.
+The models in `nodeapp/src/model/` are the database design.
 
 ## Get the code
 
