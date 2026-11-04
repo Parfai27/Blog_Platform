@@ -1,0 +1,163 @@
+{
+  "info": {
+    "name": "Open Margin",
+    "description": "Open Margin API at http://localhost:1000. Start the server with `npm run dev` inside nodeapp, then import this collection.\n\nEach body only shows the fields. Type your own values before sending. Sign up stays form-data because the avatar is a file. Login, forgot password, and reset password are raw JSON.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:1000"
+    }
+  ],
+  "item": [
+    {
+      "name": "Welcome",
+      "item": [
+        {
+          "name": "GET /api/health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/health"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Sign up",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "firstName", "value": "", "type": "text" },
+                { "key": "lastName", "value": "", "type": "text" },
+                { "key": "email", "value": "", "type": "text" },
+                { "key": "password", "value": "", "type": "text" },
+                { "key": "avatar", "type": "file", "src": "" }
+              ]
+            },
+            "url": "{{baseUrl}}/api/auth/signup",
+            "description": "Fill firstName, lastName, email, and password. Set avatar to File and choose your profile image. Password must be 8 to 72 characters. Avatar must be JPEG, PNG, or WebP, up to 2 MB."
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"\",\n  \"password\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/api/auth/login",
+            "description": "Fill email and password. Copy the token from the response when a later request needs Authorization: Bearer <token>."
+          }
+        },
+        {
+          "name": "Forgot password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/api/auth/forgot-password",
+            "description": "Fill the email you signed up with. Copy data.resetCode from the response into Reset password."
+          }
+        },
+        {
+          "name": "Reset password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"\",\n  \"code\": \"\",\n  \"newPassword\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/api/auth/reset-password",
+            "description": "Fill email, the 6-digit code from Forgot password, and the new password (8 to 72 characters)."
+          }
+        },
+        {
+          "name": "Get my profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer "
+              }
+            ],
+            "url": "{{baseUrl}}/api/auth/me",
+            "description": "Paste the token from Login after \"Bearer \". Returns the logged-in user. A blocked account gets 403."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Update my profile",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer "
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "firstName", "value": "", "type": "text" },
+                { "key": "lastName", "value": "", "type": "text" },
+                { "key": "bio", "value": "", "type": "text" },
+                { "key": "avatar", "type": "file", "src": "" }
+              ]
+            },
+            "url": "{{baseUrl}}/api/users/me",
+            "description": "Paste the token from Login after \"Bearer \". Send only the fields you want to change and untick the rest. Bio is up to 280 characters. A new avatar replaces the old one (JPEG, PNG, or WebP, up to 2 MB)."
+          }
+        }
+      ]
+    }
+  ]
+}
