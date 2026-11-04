@@ -16,6 +16,7 @@ export async function api(path, { token, method = "GET", body } = {}) {
   }
   return data
 }
+<<<<<<< HEAD
 
 // Higher-level API helpers matching your Express backend routes
 const BASE_URL = "http://localhost:5000/api"
@@ -65,3 +66,5 @@ export const blogApi = {
     })
   },
 }
+=======
+>>>>>>> 64901d03c8267b51cf3338c6552ec3631dbeaa4f

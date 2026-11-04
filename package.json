@@ -1,0 +1,13 @@
+{
+  "name": "blog-platform",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev:api": "npm run dev --prefix nodeapp",
+    "dev:web": "npm run dev --prefix reactapp",
+    "start": "npm start --prefix nodeapp",
+    "test:ai": "npm run test:ai --prefix nodeapp"
+  }
+}
