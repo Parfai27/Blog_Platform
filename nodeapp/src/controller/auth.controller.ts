@@ -3,10 +3,9 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt, { SignOptions } from "jsonwebtoken";
 import mongoose from "mongoose";
-import { cloudinaryReady } from "../config/cloudinary";
 import { devResetCodeEnabled } from "../config/devFlags";
 import { User } from "../model/user.model";
-import { deleteAvatar, uploadAvatar } from "../services/avatar.service";
+import { deleteAvatar, IMAGE_STORAGE_NOT_READY, imageStorageReady, uploadAvatar } from "../services/avatar.service";
 import { emailReady, sendResetCodeEmail } from "../services/email.service";
 import { errorResponse, successResponse } from "../utils/response.helper";
 import { publicUser } from "../utils/user.helper";
@@ -58,8 +57,8 @@ export const signup = async (req: Request, res: Response) => {
     if (!file) {
       return res.status(400).json(errorResponse("A profile image is required"));
     }
-    if (!cloudinaryReady()) {
-      return res.status(503).json(errorResponse("Image upload is not configured. Set the Cloudinary environment variables."));
+    if (!imageStorageReady()) {
+      return res.status(503).json(errorResponse(IMAGE_STORAGE_NOT_READY));
     }
 
     const existing = await User.findOne({ email });
@@ -67,7 +66,7 @@ export const signup = async (req: Request, res: Response) => {
       return res.status(409).json(errorResponse("An account with this email already exists"));
     }
 
-    const avatar = await uploadAvatar(file.buffer);
+    const avatar = await uploadAvatar(file.buffer, file.mimetype);
     uploadedId = avatar.publicId;
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({
