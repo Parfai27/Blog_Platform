@@ -52,8 +52,18 @@ export const seedSamplePosts = async () => {
 
   for (const sample of SAMPLE_POSTS) {
     const authorId = authorIds.get(sample.author);
-    if (await Post.exists({ author: authorId, title: sample.title })) {
-      log(`Post "${sample.title}" already exists`);
+    const existing = await Post.findOne({ author: authorId, title: sample.title }).select("coverImage");
+    if (existing) {
+      // Keep sample covers in step with the sample data, but never replace a cover someone uploaded.
+      const current = existing.coverImage?.publicId ?? "";
+      const wanted = sample.image ? `local:${sample.image}` : "";
+      if (wanted && current.startsWith("local:") && current !== wanted) {
+        existing.coverImage = { url: sample.image, publicId: wanted };
+        await existing.save();
+        log(`Updated the cover of "${sample.title}"`);
+      } else {
+        log(`Post "${sample.title}" already exists`);
+      }
       continue;
     }
 
