@@ -8,6 +8,7 @@ import aiRouter from "./router/ai.router";
 import authRouter from "./router/auth.router";
 import categoryRouter from "./router/category.router";
 import commentRouter from "./router/comment.router";
+import imageRouter from "./router/image.router";
 import postRouter from "./router/post.router";
 import reportRouter from "./router/report.router";
 import tagRouter from "./router/tag.router";
@@ -30,6 +31,7 @@ app.use("/api/categories", categoryRouter);
 app.use("/api/tags", tagRouter);
 app.use("/api/posts", postRouter);
 app.use("/api/comments", commentRouter);
+app.use("/api/images", imageRouter);
 app.use("/api/reports", reportRouter);
 app.use("/api/admin", adminRouter);
 

@@ -1,10 +1,9 @@
 import { Request, Response } from "express";
 import mongoose, { HydratedDocument, Types } from "mongoose";
-import { cloudinaryReady } from "../config/cloudinary";
 import { Category } from "../model/category.model";
 import { Post, POST_LIMITS, PostRecord } from "../model/post.model";
 import { Tag } from "../model/tag.model";
-import { deleteCover, uploadCover } from "../services/avatar.service";
+import { deleteCover, IMAGE_STORAGE_NOT_READY, imageStorageReady, uploadCover } from "../services/avatar.service";
 import { removePost } from "../services/content.service";
 import { resolveTags, TagInputError } from "../services/tag.service";
 import { databaseReady } from "../utils/db.helper";
@@ -251,15 +250,15 @@ export const setPostCover = async (req: Request, res: Response) => {
     if (!req.file) {
       return res.status(400).json(errorResponse("Choose an image in the cover field"));
     }
-    if (!cloudinaryReady()) {
-      return res.status(503).json(errorResponse("Image upload is not configured. Set the Cloudinary environment variables."));
+    if (!imageStorageReady()) {
+      return res.status(503).json(errorResponse(IMAGE_STORAGE_NOT_READY));
     }
 
     const post = await loadOwnPost(req, res);
     if (!post) return;
 
     const oldCoverId = post.coverImage?.publicId;
-    const cover = await uploadCover(req.file.buffer);
+    const cover = await uploadCover(req.file.buffer, req.file.mimetype);
     uploadedId = cover.publicId;
     post.coverImage = cover;
     await post.save();

@@ -30,7 +30,7 @@ Fill `.env` before starting:
 
 - `MONGO_URI`, for example `mongodb://127.0.0.1:27017/open-margin`
 - `JWT_SECRET`, any long random string
-- `CLOUDINARY_*`, needed for sign-up, because a profile image is required
+- `CLOUDINARY_*`, needed for sign-up, because a profile image is required. If Cloudinary isn't available, set `IMAGE_STORAGE=mongo` instead: uploads are then kept in MongoDB and served from `/api/images/:id`, and the Cloudinary keys aren't needed
 - `SENDGRID_API_KEY` and `EMAIL_FROM` for reset emails. For local testing you can set `ALLOW_DEV_RESET_CODE=true` instead, and the reset code comes back in the response
 - `LLM_API_KEY` for the AI assistant, or set `MOCK_AI=true` to use fake suggestions
 
@@ -115,6 +115,7 @@ Open the `androidapp/` folder in Android Studio and press Run. The emulator talk
 | GET | `/api/posts/mine`, `/api/posts/mine/:id` | token |
 | DELETE | `/api/posts/:id` | token, own post or admin |
 | GET | `/api/users/:id` | none (public author profile) |
+| GET | `/api/images/:id` | none (images stored with `IMAGE_STORAGE=mongo`) |
 | GET, POST | `/api/posts/:id/like` | token (POST likes or unlikes) |
 | GET | `/api/posts/:id/comments` | none |
 | POST | `/api/posts/:id/comments` | token |
@@ -130,6 +131,7 @@ Open the `androidapp/` folder in Android Studio and press Run. The emulator talk
 Run these inside `nodeapp`:
 
 - `npm run make-admin -- someone@example.com` turns an existing account into an admin, so you can test admin routes.
+- `npm run create-admin -- admin@example.com "the password"` creates an admin account without signing up (no photo needed), or makes an existing account an admin and sets its password. Add a first and last name after the password if you like.
 - `npm run seed:categories` adds City, Food, Craft, and Field Notes. Running it again skips the ones that exist.
 - `npm run seed:sample` adds the categories, 8 sample authors, their published posts (with tags, likes, and comments), and one draft. These are the same stories the homepage shows today. The sample login password is `SAMPLE_PASSWORD` in `nodeapp/src/data/sample-content.ts`. Running it again skips what exists. It refuses to run with `NODE_ENV=production`.
 

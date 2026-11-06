@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
-import { cloudinaryReady } from "../config/cloudinary";
 import { Post } from "../model/post.model";
 import { User } from "../model/user.model";
-import { deleteAvatar, uploadAvatar } from "../services/avatar.service";
+import { deleteAvatar, IMAGE_STORAGE_NOT_READY, imageStorageReady, uploadAvatar } from "../services/avatar.service";
 import { databaseReady } from "../utils/db.helper";
 import { errorResponse, successResponse } from "../utils/response.helper";
 import { publicUser } from "../utils/user.helper";
@@ -81,8 +80,8 @@ export const updateMe = async (req: Request, res: Response) => {
     if ((bio?.length ?? 0) > 280) {
       return res.status(400).json(errorResponse("Bio must be 280 characters or fewer"));
     }
-    if (file && !cloudinaryReady()) {
-      return res.status(503).json(errorResponse("Image upload is not configured. Set the Cloudinary environment variables."));
+    if (file && !imageStorageReady()) {
+      return res.status(503).json(errorResponse(IMAGE_STORAGE_NOT_READY));
     }
 
     const user = await User.findById(userId);
@@ -96,7 +95,7 @@ export const updateMe = async (req: Request, res: Response) => {
 
     const oldAvatarId = user.avatar?.publicId;
     if (file) {
-      const avatar = await uploadAvatar(file.buffer);
+      const avatar = await uploadAvatar(file.buffer, file.mimetype);
       uploadedId = avatar.publicId;
       user.avatar = avatar;
     }

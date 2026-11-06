@@ -795,6 +795,25 @@
           }
         }
       ]
+    },
+    {
+      "name": "Images",
+      "item": [
+        {
+          "name": "Get image",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/images/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "images", ":id"],
+              "variable": [{ "key": "id", "value": "" }]
+            },
+            "description": "Only used when IMAGE_STORAGE=mongo. Avatar and cover urls then look like /api/images/<id>; fill that id in Params. Returns the image itself, not JSON."
+          }
+        }
+      ]
     }
   ]
 }
