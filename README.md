@@ -1,6 +1,6 @@
 # Blog_Platform
 
-Open Margin, a community blog. Express + TypeScript + MongoDB API in `nodeapp/`, React + Vite frontend in `reactapp/`.
+Open Margin, a community blog. Express + TypeScript + MongoDB API in `nodeapp/`, React + Vite frontend in `reactapp/`, Kotlin + Jetpack Compose Android app in `androidapp/`.
 
 The models in `nodeapp/src/model/` are the database design.
 
@@ -52,7 +52,42 @@ npm install
 npm run dev
 ```
 
-Vite forwards `/api` requests to the API on port 1000.
+Vite forwards `/api` requests to the API on port 1000. To use an API on another port, start Vite with `API_URL`, for example `API_URL=http://localhost:1099 npm run dev`.
+
+For sample stories to show up, run `npm run seed:sample` inside `nodeapp` once.
+
+### Pages
+
+| Address | Page |
+|---|---|
+| `/` | Homepage with the latest stories |
+| `/blogs`, `/search?q=` | All stories, and search results (filter by category and tag, sort) |
+| `/posts/:slug` | A story with likes, comments, and reporting |
+| `/categories/:slug`, `/authors/:id` | A category's stories, and an author's profile |
+| `/about` | About Open Margin |
+| `/register`, `/login`, `/forgot-password` | Accounts |
+| `/write`, `/write/:id`, `/my-posts`, `/settings` | Writing and your profile (logged in) |
+| `/admin/reports`, `/admin/categories`, `/admin/users` | Admin area (admins only) |
+
+### Where things are
+
+- `src/lib/api.js` is the only way the app talks to the API. Use `api("/posts")`; it adds the login token and returns the reply's `data`.
+- `src/context/` holds the login state. Read it with `useAuth()`.
+- `src/components/ui/` has the shared Figma pieces: Button, Badge, TagChip, Avatar, form fields, Modal, and loading and error states.
+- Colours and fonts are defined once in `src/index.css` (`bg-brand`, `text-muted`, `font-serif`, ...). Use those instead of colour codes.
+
+### Production build
+
+```bash
+cd reactapp
+npm run build
+```
+
+This creates `reactapp/dist`. When that folder exists, the API serves the site too, so http://localhost:1000 shows the whole app.
+
+## Run the Android app
+
+Open the `androidapp/` folder in Android Studio and press Run. The emulator talks to the API at `http://10.0.2.2:1000/`. See [androidapp/README.md](androidapp/README.md) for using a real phone.
 
 ## API so far
 

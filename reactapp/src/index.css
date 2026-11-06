@@ -1,5 +1,27 @@
 @import "tailwindcss";
 
+/* Site colours and fonts from the Figma. Use them as bg-brand, text-muted, border-line, font-serif, ... */
+@theme {
+  --color-ink: #161616;
+  --color-ink-soft: #3c3c3c;
+  --color-muted: #66706c;
+  --color-subtle: #8a918d;
+  --color-line: #ececec;
+  --color-line-strong: #d5ddd8;
+  --color-paper: #f5f5f2;
+  --color-brand: #0f6b4c;
+  --color-brand-hover: #0b5a3f;
+  --color-brand-bright: #1db87a;
+  --color-brand-soft: #e8f6ee;
+  --color-danger: #b42318;
+  --color-danger-soft: #fdecea;
+  --color-warn: #8a5a00;
+  --color-warn-soft: #fdf3d8;
+
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-serif: "Newsreader", Georgia, serif;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -13,12 +35,11 @@ body,
 body {
   margin: 0;
   background: #ffffff;
-  color: #161616;
-  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
 }
 
-.font-serif-display {
-  font-family: "Newsreader", Georgia, serif;
+.font-serif {
   font-optical-sizing: auto;
 }
 
@@ -37,10 +58,46 @@ body {
 
 button,
 input,
+select,
 textarea {
   font: inherit;
 }
 
 textarea {
   resize: vertical;
+}
+
+/* A clear outline for keyboard users only. Mouse clicks don't show it. */
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+/* Hidden until someone presses Tab, then it lets them jump past the Navbar. */
+.skip-link {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 60;
+  transform: translateY(-200%);
+  border-radius: 9999px;
+  background: var(--color-ink);
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .cover-fade {
+    animation: none;
+  }
 }
