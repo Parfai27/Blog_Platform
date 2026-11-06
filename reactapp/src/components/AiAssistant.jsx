@@ -2,10 +2,10 @@ import { useEffect, useState } from "react"
 import { api } from "../lib/api"
 
 const ACTIONS = [
-  { id: "titles", label: "Suggest titles", path: "/api/ai/titles" },
-  { id: "summary", label: "Write a summary", path: "/api/ai/summary" },
-  { id: "tags", label: "Suggest tags", path: "/api/ai/tags" },
-  { id: "improve", label: "Improve this paragraph", path: "/api/ai/improve" },
+  { id: "titles", label: "Suggest titles", path: "/ai/titles" },
+  { id: "summary", label: "Write a summary", path: "/ai/summary" },
+  { id: "tags", label: "Suggest tags", path: "/ai/tags" },
+  { id: "improve", label: "Improve this paragraph", path: "/ai/improve" },
 ]
 
 const emptySuggestion = () => ({
@@ -19,8 +19,9 @@ const emptySuggestion = () => ({
   mock: false,
 })
 
+// enabled: true once there is a token the AI routes accept (a login or the dev session).
 export default function AiAssistant({
-  token,
+  enabled,
   title,
   body,
   existingTags,
@@ -37,11 +38,11 @@ export default function AiAssistant({
   const [suggestion, setSuggestion] = useState(emptySuggestion)
 
   useEffect(() => {
-    if (!token) return
-    api("/api/ai/usage", { token })
-      .then((payload) => setUsage(payload.data))
+    if (!enabled) return
+    api("/ai/usage")
+      .then(setUsage)
       .catch(() => {})
-  }, [token])
+  }, [enabled])
 
   const ask = async (action) => {
     setMessage("")
@@ -63,8 +64,7 @@ export default function AiAssistant({
 
     setPending(action.id)
     try {
-      const payload = await api(action.path, { token, method: "POST", body: bodyPayload })
-      const data = payload.data
+      const data = await api(action.path, { method: "POST", body: bodyPayload })
       setUsage(data.usage)
       setSuggestion({
         kind: action.id,
@@ -80,9 +80,9 @@ export default function AiAssistant({
     } catch (error) {
       setMessageTone("error")
       setMessage(error.message || "The assistant is unavailable right now. Keep writing and try again.")
-      if (token) {
-        api("/api/ai/usage", { token })
-          .then((payload) => setUsage(payload.data))
+      if (enabled) {
+        api("/ai/usage")
+          .then(setUsage)
           .catch(() => {})
       }
     } finally {
@@ -125,16 +125,16 @@ export default function AiAssistant({
   }
 
   return (
-    <aside className="rounded-2xl border border-[#dfe5e1] bg-white p-4 shadow-sm">
+    <aside className="rounded-2xl border border-line bg-white p-4 shadow-sm">
       <div className="flex items-start justify-between gap-3">
         <div>
           <h2 className="text-base font-bold">AI assistant</h2>
-          <p className="mt-1 text-sm text-[#5d6b66]">
+          <p className="mt-1 text-sm text-muted">
             Suggestions stay here until you edit them and click Accept.
           </p>
         </div>
         {usage && (
-          <p className="shrink-0 text-xs font-semibold text-[#0f6b4c]">
+          <p className="shrink-0 text-xs font-semibold text-brand">
             {usage.remaining} of {usage.limit} left today
           </p>
         )}
@@ -146,9 +146,9 @@ export default function AiAssistant({
             key={action.id}
             type="button"
             onMouseDown={(event) => event.preventDefault()}
-            disabled={!token || pending !== ""}
+            disabled={!enabled || pending !== ""}
             onClick={() => ask(action)}
-            className="rounded-xl border border-[#d5ddd8] px-3 py-2 text-left text-sm font-semibold enabled:hover:border-[#0f6b4c] enabled:hover:bg-[#f3faf6] disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-xl border border-line-strong px-3 py-2 text-left text-sm font-semibold enabled:hover:border-brand enabled:hover:bg-brand-soft disabled:cursor-not-allowed disabled:opacity-60"
           >
             {pending === action.id ? "Working…" : action.label}
           </button>
@@ -158,7 +158,7 @@ export default function AiAssistant({
       {message && (
         <p
           className={`mt-4 rounded-xl px-3 py-2 text-sm ${
-            messageTone === "ok" ? "bg-[#e8f6ee] text-[#0f6b4c]" : "bg-[#fff1f0] text-[#9b2c2c]"
+            messageTone === "ok" ? "bg-brand-soft text-brand" : "bg-danger-soft text-danger"
           }`}
         >
           {message}
@@ -166,9 +166,9 @@ export default function AiAssistant({
       )}
 
       {suggestion.kind && (
-        <div className="mt-4 rounded-xl bg-[#f6f7f4] p-3">
+        <div className="mt-4 rounded-xl bg-paper p-3">
           {suggestion.mock && (
-            <p className="mb-3 text-xs text-[#5d6b66]">
+            <p className="mb-3 text-xs text-muted">
               Local preview. Set LLM_API_KEY and turn MOCK_AI off for a real model.
             </p>
           )}
@@ -194,7 +194,7 @@ export default function AiAssistant({
                   onChange={(event) =>
                     setSuggestion((current) => ({ ...current, chosenTitle: event.target.value }))
                   }
-                  className="rounded-lg border border-[#d5ddd8] bg-white px-3 py-2"
+                  className="rounded-lg border border-line-strong bg-white px-3 py-2"
                 />
               </label>
             </div>
@@ -209,7 +209,7 @@ export default function AiAssistant({
                   setSuggestion((current) => ({ ...current, summary: event.target.value }))
                 }
                 rows={4}
-                className="rounded-lg border border-[#d5ddd8] bg-white px-3 py-2"
+                className="rounded-lg border border-line-strong bg-white px-3 py-2"
               />
             </label>
           )}
@@ -222,7 +222,7 @@ export default function AiAssistant({
                 onChange={(event) =>
                   setSuggestion((current) => ({ ...current, tags: event.target.value }))
                 }
-                className="rounded-lg border border-[#d5ddd8] bg-white px-3 py-2"
+                className="rounded-lg border border-line-strong bg-white px-3 py-2"
               />
             </label>
           )}
@@ -230,7 +230,7 @@ export default function AiAssistant({
           {suggestion.kind === "improve" && (
             <div className="grid gap-3">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-[#5d6b66]">Before</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted">Before</p>
                 <p className="mt-1 text-sm leading-6">{suggestion.original}</p>
               </div>
               <label className="grid gap-1 text-sm font-medium">
@@ -241,7 +241,7 @@ export default function AiAssistant({
                     setSuggestion((current) => ({ ...current, improved: event.target.value }))
                   }
                   rows={5}
-                  className="rounded-lg border border-[#d5ddd8] bg-white px-3 py-2"
+                  className="rounded-lg border border-line-strong bg-white px-3 py-2"
                 />
               </label>
             </div>
@@ -251,14 +251,14 @@ export default function AiAssistant({
             <button
               type="button"
               onClick={accept}
-              className="rounded-lg bg-[#0f6b4c] px-3 py-2 text-sm font-semibold text-white"
+              className="rounded-lg bg-brand px-3 py-2 text-sm font-semibold text-white"
             >
               Accept
             </button>
             <button
               type="button"
               onClick={() => setSuggestion(emptySuggestion())}
-              className="rounded-lg px-3 py-2 text-sm font-semibold text-[#5d6b66]"
+              className="rounded-lg px-3 py-2 text-sm font-semibold text-muted"
             >
               Dismiss
             </button>

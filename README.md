@@ -20,7 +20,7 @@ cp .env.example .env
 npm run dev
 ```
 
-Fill in `.env` before starting. The API runs on http://localhost:1000.
+Fill in `.env` before starting. The API runs on http://localhost:1000. To add sample stories, run `npm run seed:sample` once.
 
 **Frontend**
 

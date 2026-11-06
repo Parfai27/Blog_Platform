@@ -6,8 +6,9 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     proxy: {
+      // Set API_URL to point the dev server at an API on another port.
       "/api": {
-        target: "http://localhost:1000",
+        target: process.env.API_URL || "http://localhost:1000",
         changeOrigin: true,
       },
     },
