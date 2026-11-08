@@ -1,0 +1,46 @@
+# Render Blueprint: one web service runs the API, and the API serves the built React site.
+# In Render: New > Blueprint > pick this repository. Render asks for each "sync: false" value.
+services:
+  - type: web
+    name: open-margin
+    runtime: node
+    plan: free
+    branch: main
+    buildCommand: npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      # Turns off the dev shortcuts (dev session, reset code in the reply).
+      - key: NODE_ENV
+        value: production
+      # Render puts one proxy in front of the app; this lets rate limits see each visitor's own address.
+      - key: TRUST_PROXY
+        value: "1"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MONGO_URI
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: SENDGRID_API_KEY
+        sync: false
+      - key: EMAIL_FROM
+        sync: false
+      - key: LLM_API_KEY
+        sync: false
+      - key: LLM_BASE_URL
+        value: https://api.groq.com/openai/v1
+      - key: LLM_MODEL
+        value: openai/gpt-oss-120b
+      - key: AI_DAILY_LIMIT
+        value: "20"
+      - key: AI_TIMEOUT_MS
+        value: "20000"
+      - key: MOCK_AI
+        value: "false"

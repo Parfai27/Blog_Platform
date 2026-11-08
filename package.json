@@ -7,6 +7,7 @@
   "scripts": {
     "dev:api": "npm run dev --prefix nodeapp",
     "dev:web": "npm run dev --prefix reactapp",
+    "build": "npm ci --include=dev --prefix reactapp && npm run build --prefix reactapp && npm ci --prefix nodeapp",
     "start": "npm start --prefix nodeapp",
     "test:ai": "npm run test:ai --prefix nodeapp"
   }

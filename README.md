@@ -33,3 +33,7 @@ npm run dev
 ## Testing the API
 
 Import `nodeapp/postman/Open-Margin.postman_collection.json` into Postman.
+
+## Deploy
+
+The site is hosted on Render as one web service, described in `render.yaml`. In Render, choose **New > Blueprint**, pick this repository, and fill in the secret values it asks for. In MongoDB Atlas, allow `0.0.0.0/0` under **Network Access**. Every push to `main` deploys again.
