@@ -18,6 +18,12 @@ import { errorResponse } from "./utils/response.helper";
 dotenv.config();
 
 const app = express();
+
+// Behind a host's proxy (Render sets TRUST_PROXY=1), use the visitor's address for rate limits
+// instead of the proxy's, so one person's failed logins don't lock everyone out.
+if (process.env.TRUST_PROXY) {
+  app.set("trust proxy", Number(process.env.TRUST_PROXY) || process.env.TRUST_PROXY);
+}
 const port = process.env.PORT || 1000;
 
 app.use(express.json({ limit: "1mb" }));

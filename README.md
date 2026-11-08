@@ -85,6 +85,19 @@ npm run build
 
 This creates `reactapp/dist`. When that folder exists, the API serves the site too, so http://localhost:1000 shows the whole app.
 
+## Deploy to Render
+
+The whole app runs as one Render web service: the API serves the built website, so there is one address and no CORS setup. `render.yaml` describes it.
+
+1. In MongoDB Atlas, open **Network Access** and allow `0.0.0.0/0`. Render's free plan has no fixed IP address.
+2. In Render, choose **New > Blueprint** and pick this repository. It deploys the `main` branch.
+3. Render asks for the secret values: `MONGO_URI`, the three `CLOUDINARY_*` keys, `SENDGRID_API_KEY`, `EMAIL_FROM`, and `LLM_API_KEY`. `JWT_SECRET` is generated for you.
+4. Render runs `npm run build` (builds the website, installs the API) and then `npm start`. It checks `/api/health` to know the app is up.
+
+On the free plan the service sleeps after 15 minutes without visitors, so the first page after a pause takes about a minute to load.
+
+Every push to `main` deploys again automatically.
+
 ## Run the Android app
 
 Open the `androidapp/` folder in Android Studio and press Run. The emulator talks to the API at `http://10.0.2.2:1000/`. See [androidapp/README.md](androidapp/README.md) for using a real phone.
