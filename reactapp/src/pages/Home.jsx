@@ -1,3 +1,4 @@
+import { ChevronLeft, ChevronRight } from "lucide-react"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { Link } from "react-router-dom"
 import PostCard from "../components/PostCard"
@@ -110,7 +111,7 @@ export default function Home() {
                 className="absolute top-1/2 left-3 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-white text-xl shadow-sm hover:border-ink md:flex"
                 aria-label="Scroll stories left"
               >
-                ‹
+                <ChevronLeft className="h-5 w-5" aria-hidden="true" />
               </button>
               <div
                 ref={scroller}
@@ -128,7 +129,7 @@ export default function Home() {
                 className="absolute top-1/2 right-3 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-white text-xl shadow-sm hover:border-ink md:flex"
                 aria-label="Scroll stories right"
               >
-                ›
+                <ChevronRight className="h-5 w-5" aria-hidden="true" />
               </button>
             </>
           )}

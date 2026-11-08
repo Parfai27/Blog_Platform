@@ -1,3 +1,4 @@
+import { Eye, EyeOff, Save, Send } from "lucide-react"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import AiAssistant from "../components/AiAssistant"
@@ -346,19 +347,23 @@ export default function Editor() {
                 <FormNotice>{notice}</FormNotice>
                 <FormError>{formError}</FormError>
                 <Button variant="secondary" onClick={saveDraft} disabled={working || (post && !dirty)}>
+                  <Save className="h-4 w-4" aria-hidden="true" />
                   {busy === "save" ? "Saving..." : published ? "Update post" : "Save draft"}
                 </Button>
                 {published ? (
                   <>
                     <Button to={`/posts/${post.slug}`} variant="dark">
+                      <Eye className="h-4 w-4" aria-hidden="true" />
                       View post
                     </Button>
                     <Button variant="ghost" onClick={unpublish} disabled={working}>
+                      <EyeOff className="h-4 w-4" aria-hidden="true" />
                       {busy === "unpublish" ? "Moving..." : "Unpublish"}
                     </Button>
                   </>
                 ) : (
                   <Button onClick={publish} disabled={working}>
+                    <Send className="h-4 w-4" aria-hidden="true" />
                     {busy === "publish" ? "Publishing..." : "Publish"}
                   </Button>
                 )}

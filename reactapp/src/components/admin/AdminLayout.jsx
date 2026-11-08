@@ -1,3 +1,4 @@
+import { ArrowLeft, Flag, FolderOpen, Users } from "lucide-react"
 import { useEffect } from "react"
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom"
 import { useAuth } from "../../context/auth-context"
@@ -7,13 +8,13 @@ import Logo from "../Logo"
 import Avatar from "../ui/Avatar"
 
 const LINKS = [
-  { to: "/admin/reports", label: "Reports" },
-  { to: "/admin/categories", label: "Categories" },
-  { to: "/admin/users", label: "Users" },
+  { to: "/admin/reports", label: "Reports", Icon: Flag },
+  { to: "/admin/categories", label: "Categories", Icon: FolderOpen },
+  { to: "/admin/users", label: "Users", Icon: Users },
 ]
 
 const linkClass = ({ isActive }) =>
-  `block rounded-lg px-3 py-2 text-sm font-semibold transition ${
+  `flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-semibold whitespace-nowrap transition ${
     isActive ? "bg-brand-soft text-brand" : "text-ink-soft hover:bg-paper hover:text-ink"
   }`
 
@@ -39,14 +40,16 @@ export default function AdminLayout() {
             <span className="text-sm font-extrabold tracking-tight">Open Margin</span>
             <span className="text-xs font-semibold text-brand">Admin</span>
           </Link>
-          <Link to="/" className="text-xs font-semibold text-muted hover:text-ink md:hidden">
-            ← Back to site
+          <Link to="/" className="inline-flex items-center gap-1 text-xs font-semibold text-muted hover:text-ink md:hidden">
+            <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
+            Back to site
           </Link>
         </div>
 
         <nav aria-label="Admin" className="flex gap-1 overflow-x-auto px-3 pb-3 md:block md:space-y-1 md:px-3 md:pb-0">
           {LINKS.map((link) => (
             <NavLink key={link.to} to={link.to} className={linkClass}>
+              <link.Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
               {link.label}
             </NavLink>
           ))}
@@ -57,8 +60,9 @@ export default function AdminLayout() {
             <Avatar person={user} size="sm" />
             <span className="truncate text-xs text-muted">{fullName(user)}</span>
           </div>
-          <Link to="/" className="mt-3 block text-sm font-semibold text-muted hover:text-ink">
-            ← Back to site
+          <Link to="/" className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-muted hover:text-ink">
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+            Back to site
           </Link>
         </div>
       </aside>

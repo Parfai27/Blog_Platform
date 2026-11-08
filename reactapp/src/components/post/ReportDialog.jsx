@@ -1,3 +1,4 @@
+import { Flag } from "lucide-react"
 import { useState } from "react"
 import { api } from "../../lib/api"
 import Button from "../ui/Button"
@@ -99,6 +100,7 @@ export default function ReportDialog({ target, onClose }) {
             Cancel
           </Button>
           <Button type="submit" disabled={sending}>
+            <Flag className="h-4 w-4" aria-hidden="true" />
             {sending ? "Sending..." : "Submit report"}
           </Button>
         </div>

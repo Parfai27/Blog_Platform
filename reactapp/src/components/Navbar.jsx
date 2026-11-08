@@ -1,3 +1,4 @@
+import { LogOut, Menu, PenSquare, Search, Settings, ShieldCheck, UserRound, X } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom"
 import { useAuth } from "../context/auth-context"
@@ -32,10 +33,7 @@ function SearchBox({ onDone, className = "" }) {
     <form onSubmit={submit} role="search" className={className}>
       <label className="relative block">
         <span className="sr-only">Search stories</span>
-        <svg viewBox="0 0 24 24" className="pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-subtle" aria-hidden="true">
-          <circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" strokeWidth="1.8" />
-          <path d="M16 16.5 20 20.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-        </svg>
+        <Search className="pointer-events-none absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-subtle" aria-hidden="true" />
         <input
           type="search"
           value={query}
@@ -66,7 +64,8 @@ function AccountMenu({ user, isAdmin, onSignOut }) {
     }
   }, [open])
 
-  const item = "block w-full px-4 py-2 text-left text-sm text-ink-soft hover:bg-paper hover:text-ink"
+  const item = "flex w-full items-center gap-2.5 px-4 py-2 text-left text-sm text-ink-soft hover:bg-paper hover:text-ink"
+  const icon = "h-4 w-4 shrink-0 text-subtle"
 
   return (
     <div ref={box} className="relative">
@@ -84,17 +83,21 @@ function AccountMenu({ user, isAdmin, onSignOut }) {
         <div role="menu" className="absolute right-0 mt-2 w-56 overflow-hidden rounded-xl border border-line bg-white py-1 shadow-lg">
           <p className="truncate border-b border-line px-4 py-2 text-xs text-subtle">{fullName(user) || user.email}</p>
           <Link role="menuitem" to={`/authors/${user.id}`} className={item} onClick={() => setOpen(false)}>
+            <UserRound className={icon} aria-hidden="true" />
             My public profile
           </Link>
           <Link role="menuitem" to="/settings" className={item} onClick={() => setOpen(false)}>
+            <Settings className={icon} aria-hidden="true" />
             Profile settings
           </Link>
           {isAdmin && (
             <Link role="menuitem" to="/admin" className={item} onClick={() => setOpen(false)}>
+              <ShieldCheck className={icon} aria-hidden="true" />
               Admin
             </Link>
           )}
           <button role="menuitem" type="button" className={`${item} border-t border-line`} onClick={onSignOut}>
+            <LogOut className={icon} aria-hidden="true" />
             Log out
           </button>
         </div>
@@ -142,6 +145,7 @@ export default function Navbar() {
             (user ? (
               <>
                 <Button to="/write" size="md">
+                  <PenSquare className="h-4 w-4" aria-hidden="true" />
                   Write a post
                 </Button>
                 <NavLink to="/my-posts" className={linkClass}>
@@ -169,13 +173,7 @@ export default function Navbar() {
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           className="ml-auto inline-flex h-10 w-10 items-center justify-center rounded-full text-ink hover:bg-paper md:hidden"
         >
-          <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-            {menuOpen ? (
-              <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-            ) : (
-              <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-            )}
-          </svg>
+          {menuOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
         </button>
       </div>
 
@@ -208,22 +206,29 @@ export default function Navbar() {
                     <Avatar person={user} size="sm" />
                     <span className="truncate text-sm font-semibold text-ink">{fullName(user)}</span>
                   </div>
-                  <Button to="/write">Write a post</Button>
+                  <Button to="/write">
+                    <PenSquare className="h-4 w-4" aria-hidden="true" />
+                    Write a post
+                  </Button>
                   <NavLink to="/my-posts" className={linkClass}>
                     My posts
                   </NavLink>
-                  <NavLink to={`/authors/${user.id}`} className={linkClass}>
+                  <NavLink to={`/authors/${user.id}`} className={(state) => `${linkClass(state)} inline-flex items-center gap-2`}>
+                    <UserRound className="h-4 w-4 text-subtle" aria-hidden="true" />
                     My public profile
                   </NavLink>
-                  <NavLink to="/settings" className={linkClass}>
+                  <NavLink to="/settings" className={(state) => `${linkClass(state)} inline-flex items-center gap-2`}>
+                    <Settings className="h-4 w-4 text-subtle" aria-hidden="true" />
                     Profile settings
                   </NavLink>
                   {isAdmin && (
-                    <NavLink to="/admin" className={linkClass}>
+                    <NavLink to="/admin" className={(state) => `${linkClass(state)} inline-flex items-center gap-2`}>
+                      <ShieldCheck className="h-4 w-4 text-subtle" aria-hidden="true" />
                       Admin
                     </NavLink>
                   )}
-                  <button type="button" onClick={handleSignOut} className="text-left text-sm font-semibold text-danger">
+                  <button type="button" onClick={handleSignOut} className="inline-flex items-center gap-2 text-left text-sm font-semibold text-danger">
+                    <LogOut className="h-4 w-4" aria-hidden="true" />
                     Log out
                   </button>
                 </div>

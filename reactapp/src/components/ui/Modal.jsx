@@ -1,3 +1,4 @@
+import { X } from "lucide-react"
 import { useEffect, useRef } from "react"
 
 // A centred dialog over a dimmed page. Escape or a click outside closes it.
@@ -40,9 +41,9 @@ export default function Modal({ title, onClose, children }) {
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="-mt-1 -mr-2 rounded-full px-2 text-2xl leading-none text-subtle hover:text-ink"
+            className="-mt-1 -mr-2 inline-flex h-9 w-9 items-center justify-center rounded-full text-subtle transition hover:bg-paper hover:text-ink"
           >
-            ×
+            <X className="h-5 w-5" aria-hidden="true" />
           </button>
         </div>
         {children}

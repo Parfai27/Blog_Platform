@@ -1,3 +1,4 @@
+import { Eye, EyeOff, Pencil, Send, Trash2 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Link, useSearchParams } from "react-router-dom"
 import Badge from "../components/ui/Badge"
@@ -187,23 +188,28 @@ export default function MyPosts() {
 
                 <div className="flex shrink-0 flex-wrap gap-2">
                   <Button to={`/write/${post.id}`} variant="secondary" size="sm">
+                    <Pencil className="h-3.5 w-3.5" aria-hidden="true" />
                     Edit
                   </Button>
                   {published ? (
                     <>
                       <Button to={`/posts/${post.slug}`} variant="secondary" size="sm">
+                        <Eye className="h-3.5 w-3.5" aria-hidden="true" />
                         View
                       </Button>
                       <Button variant="ghost" size="sm" onClick={() => unpublish(post)} disabled={busy}>
+                        <EyeOff className="h-3.5 w-3.5" aria-hidden="true" />
                         Unpublish
                       </Button>
                     </>
                   ) : (
                     <Button size="sm" onClick={() => publish(post)} disabled={busy}>
+                      <Send className="h-3.5 w-3.5" aria-hidden="true" />
                       Publish
                     </Button>
                   )}
                   <Button variant="danger" size="sm" onClick={() => remove(post)} disabled={busy}>
+                    <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
                     Delete
                   </Button>
                 </div>

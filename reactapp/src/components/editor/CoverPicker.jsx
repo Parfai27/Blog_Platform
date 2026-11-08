@@ -1,3 +1,4 @@
+import { ImagePlus } from "lucide-react"
 import { useEffect, useId, useState } from "react"
 import { checkImage, IMAGE_ACCEPT, LIMITS } from "../../lib/validation"
 
@@ -49,12 +50,14 @@ export default function CoverPicker({ savedUrl, file, onChange }) {
         {shown ? (
           <>
             <img src={shown} alt="Cover" className="absolute inset-0 h-full w-full object-cover" />
-            <span className="relative rounded-full bg-white/90 px-4 py-2 text-sm font-semibold text-ink opacity-0 shadow transition group-hover:opacity-100">
+            <span className="relative inline-flex items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-sm font-semibold text-ink opacity-0 shadow transition group-hover:opacity-100">
+              <ImagePlus className="h-4 w-4" aria-hidden="true" />
               Change cover image
             </span>
           </>
         ) : (
           <span className="px-4 text-center">
+            <ImagePlus className="mx-auto mb-2 h-8 w-8 text-subtle" aria-hidden="true" />
             <span className="block text-sm font-semibold text-ink">Upload cover image</span>
             <span className="mt-1 block text-xs text-subtle">
               Drop a photo here, or choose a file · JPEG, PNG, or WebP up to {LIMITS.coverMb} MB

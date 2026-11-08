@@ -1,3 +1,4 @@
+import { Camera } from "lucide-react"
 import { useEffect, useId, useRef, useState } from "react"
 import { checkImage, IMAGE_ACCEPT, LIMITS } from "../lib/validation"
 import Avatar from "./ui/Avatar"
@@ -47,8 +48,9 @@ export default function AvatarPicker({ person, file, onChange, error, label = "P
           <input id={id} ref={input} type="file" accept={IMAGE_ACCEPT} onChange={choose} className="sr-only" />
           <label
             htmlFor={id}
-            className="inline-flex cursor-pointer items-center rounded-full border border-line-strong bg-white px-4 py-2 text-sm font-semibold text-ink hover:border-ink"
+            className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-line-strong bg-white px-4 py-2 text-sm font-semibold text-ink hover:border-ink"
           >
+            <Camera className="h-4 w-4" aria-hidden="true" />
             {file || person?.avatar ? "Change photo" : "Choose photo"}
           </label>
           <p className="mt-1 text-xs text-subtle">JPEG, PNG, or WebP, up to {LIMITS.avatarMb} MB</p>
