@@ -1,3 +1,4 @@
+import { RotateCcw } from "lucide-react"
 import Button from "./Button"
 
 export function Spinner({ className = "" }) {
@@ -25,6 +26,7 @@ export function ErrorMessage({ message, onRetry }) {
       <p>{message || "Something went wrong."}</p>
       {onRetry && (
         <Button variant="secondary" size="sm" className="mt-3" onClick={onRetry}>
+          <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
           Try again
         </Button>
       )}

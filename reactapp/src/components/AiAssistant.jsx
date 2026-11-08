@@ -1,11 +1,12 @@
+import { Check, FileText, Heading, Loader2, Sparkles, Tags, Wand2, X } from "lucide-react"
 import { useEffect, useState } from "react"
 import { api } from "../lib/api"
 
 const ACTIONS = [
-  { id: "titles", label: "Suggest titles", path: "/ai/titles" },
-  { id: "summary", label: "Write a summary", path: "/ai/summary" },
-  { id: "tags", label: "Suggest tags", path: "/ai/tags" },
-  { id: "improve", label: "Improve this paragraph", path: "/ai/improve" },
+  { id: "titles", label: "Suggest titles", Icon: Heading, path: "/ai/titles" },
+  { id: "summary", label: "Write a summary", Icon: FileText, path: "/ai/summary" },
+  { id: "tags", label: "Suggest tags", Icon: Tags, path: "/ai/tags" },
+  { id: "improve", label: "Improve this paragraph", Icon: Wand2, path: "/ai/improve" },
 ]
 
 const emptySuggestion = () => ({
@@ -128,7 +129,10 @@ export default function AiAssistant({
     <aside className="rounded-2xl border border-line bg-white p-4 shadow-sm">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h2 className="text-base font-bold">AI assistant</h2>
+          <h2 className="flex items-center gap-2 text-base font-bold">
+            <Sparkles className="h-4 w-4 text-brand" aria-hidden="true" />
+            AI assistant
+          </h2>
           <p className="mt-1 text-sm text-muted">
             Suggestions stay here until you edit them and click Accept.
           </p>
@@ -148,8 +152,13 @@ export default function AiAssistant({
             onMouseDown={(event) => event.preventDefault()}
             disabled={!enabled || pending !== ""}
             onClick={() => ask(action)}
-            className="rounded-xl border border-line-strong px-3 py-2 text-left text-sm font-semibold enabled:hover:border-brand enabled:hover:bg-brand-soft disabled:cursor-not-allowed disabled:opacity-60"
+            className="flex items-center gap-2.5 rounded-xl border border-line-strong px-3 py-2 text-left text-sm font-semibold enabled:hover:border-brand enabled:hover:bg-brand-soft disabled:cursor-not-allowed disabled:opacity-60"
           >
+            {pending === action.id ? (
+              <Loader2 className="h-4 w-4 shrink-0 animate-spin text-brand" aria-hidden="true" />
+            ) : (
+              <action.Icon className="h-4 w-4 shrink-0 text-brand" aria-hidden="true" />
+            )}
             {pending === action.id ? "Working…" : action.label}
           </button>
         ))}
@@ -251,15 +260,17 @@ export default function AiAssistant({
             <button
               type="button"
               onClick={accept}
-              className="rounded-lg bg-brand px-3 py-2 text-sm font-semibold text-white"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-3 py-2 text-sm font-semibold text-white"
             >
+              <Check className="h-4 w-4" aria-hidden="true" />
               Accept
             </button>
             <button
               type="button"
               onClick={() => setSuggestion(emptySuggestion())}
-              className="rounded-lg px-3 py-2 text-sm font-semibold text-muted"
+              className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold text-muted hover:text-ink"
             >
+              <X className="h-4 w-4" aria-hidden="true" />
               Dismiss
             </button>
           </div>

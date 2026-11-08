@@ -1,3 +1,4 @@
+import { Search, X } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
 import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { api } from "../lib/api"
@@ -133,7 +134,8 @@ export default function StoryList({ fixed = {}, layout = "grid", showSearch = tr
               placeholder={fixed.category ? "Search in this category" : "Search stories"}
               className={`${CONTROL} min-w-0 flex-1`}
             />
-            <button type="submit" className="rounded-full bg-ink px-4 py-2 text-sm font-semibold text-white hover:bg-black">
+            <button type="submit" className="inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2 text-sm font-semibold text-white hover:bg-black">
+              <Search className="h-4 w-4" aria-hidden="true" />
               Search
             </button>
           </form>
@@ -167,8 +169,9 @@ export default function StoryList({ fixed = {}, layout = "grid", showSearch = tr
         <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
           <span className="text-subtle">Tags:</span>
           {tag && !tagChoices.some(([slug]) => slug === tag) && (
-            <button type="button" onClick={() => setParam("tag", "")} className="rounded-full bg-brand px-3 py-1 text-xs font-medium text-white">
-              {activeTagName} ×
+            <button type="button" onClick={() => setParam("tag", "")} className="inline-flex items-center gap-1 rounded-full bg-brand px-3 py-1 text-xs font-medium text-white">
+              {activeTagName}
+              <X className="h-3 w-3" aria-hidden="true" />
             </button>
           )}
           {tagChoices.map(([slug, name]) => (
@@ -177,12 +180,12 @@ export default function StoryList({ fixed = {}, layout = "grid", showSearch = tr
               type="button"
               aria-pressed={tag === slug}
               onClick={() => setParam("tag", tag === slug ? "" : slug)}
-              className={`rounded-full border px-3 py-1 text-xs font-medium transition ${
+              className={`inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-medium transition ${
                 tag === slug ? "border-brand bg-brand text-white" : "border-brand/25 bg-brand-soft text-brand hover:border-brand"
               }`}
             >
               {name}
-              {tag === slug && " ×"}
+              {tag === slug && <X className="h-3 w-3" aria-hidden="true" />}
             </button>
           ))}
         </div>

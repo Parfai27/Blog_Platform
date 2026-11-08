@@ -1,21 +1,8 @@
+import { Heart } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useAuth } from "../../context/auth-context"
 import { api } from "../../lib/api"
-
-function Heart({ filled }) {
-  return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true">
-      <path
-        d="M12 20s-7-4.35-7-10a4 4 0 0 1 7-2.65A4 4 0 0 1 19 10c0 5.65-7 10-7 10Z"
-        fill={filled ? "currentColor" : "none"}
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
 
 // The heart with the like count. Visitors are sent to log in first.
 export default function LikeButton({ postId, initialCount }) {
@@ -73,7 +60,7 @@ export default function LikeButton({ postId, initialCount }) {
         liked ? "border-danger/30 bg-danger-soft text-danger" : "border-line-strong bg-white text-ink hover:border-ink"
       }`}
     >
-      <Heart filled={liked} />
+      <Heart className="h-4 w-4" fill={liked ? "currentColor" : "none"} aria-hidden="true" />
       {count}
     </button>
   )

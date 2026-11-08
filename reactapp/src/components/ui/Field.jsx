@@ -1,3 +1,4 @@
+import { AlertCircle, CheckCircle2, Eye, EyeOff } from "lucide-react"
 import { useId, useState } from "react"
 
 const INPUT =
@@ -35,7 +36,7 @@ export function TextField({ label, error, hint, className = "", ...props }) {
   )
 }
 
-// A password input with a Show / Hide toggle.
+// A password input with an eye button to show or hide what was typed.
 export function PasswordField({ label = "Password", error, hint, className = "", ...props }) {
   const id = useId()
   const [visible, setVisible] = useState(false)
@@ -52,16 +53,19 @@ export function PasswordField({ label = "Password", error, hint, className = "",
           type={visible ? "text" : "password"}
           aria-invalid={Boolean(error)}
           aria-describedby={describedBy}
-          className={`${INPUT} pr-16 ${error ? "border-danger" : "border-line-strong"}`}
+          className={`${INPUT} pr-11 ${error ? "border-danger" : "border-line-strong"}`}
           {...props}
         />
         <button
           type="button"
           onClick={() => setVisible((value) => !value)}
           aria-controls={id}
-          className="absolute top-1/2 right-2 -translate-y-1/2 rounded-full px-2 py-1 text-xs font-semibold text-muted hover:text-ink"
+          aria-label={visible ? "Hide password" : "Show password"}
+          aria-pressed={visible}
+          title={visible ? "Hide password" : "Show password"}
+          className="absolute top-1/2 right-1.5 inline-flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full text-muted transition hover:bg-paper hover:text-ink"
         >
-          {visible ? "Hide" : "Show"}
+          {visible ? <EyeOff className="h-4 w-4" aria-hidden="true" /> : <Eye className="h-4 w-4" aria-hidden="true" />}
         </button>
       </div>
       {error ? (
@@ -111,8 +115,9 @@ export function TextAreaField({ label, error, maxLength, value, className = "", 
 export function FormError({ children }) {
   if (!children) return null
   return (
-    <p role="alert" className="rounded-xl bg-danger-soft px-3 py-2 text-sm text-danger">
-      {children}
+    <p role="alert" className="flex items-start gap-2 rounded-xl bg-danger-soft px-3 py-2 text-sm text-danger">
+      <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+      <span>{children}</span>
     </p>
   )
 }
@@ -120,8 +125,9 @@ export function FormError({ children }) {
 export function FormNotice({ children }) {
   if (!children) return null
   return (
-    <p role="status" className="rounded-xl bg-brand-soft px-3 py-2 text-sm text-brand">
-      {children}
+    <p role="status" className="flex items-start gap-2 rounded-xl bg-brand-soft px-3 py-2 text-sm text-brand">
+      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+      <span>{children}</span>
     </p>
   )
 }

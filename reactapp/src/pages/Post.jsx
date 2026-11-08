@@ -1,3 +1,4 @@
+import { CalendarDays, Clock, Flag, Pencil } from "lucide-react"
 import { useCallback, useEffect, useState } from "react"
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom"
 import Comments from "../components/post/Comments"
@@ -65,7 +66,8 @@ export default function Post() {
   }
 
   const isOwner = user && post.author?.id === user.id
-  const meta = [formatDate(post.publishedAt), formatReadTime(post.readTime)].filter(Boolean).join(" · ")
+  const published = formatDate(post.publishedAt)
+  const readTime = formatReadTime(post.readTime)
 
   return (
     <div className="bg-paper">
@@ -92,7 +94,22 @@ export default function Post() {
               ) : (
                 <span className="text-sm font-semibold text-muted">Deleted account</span>
               )}
-              {meta && <p className="text-xs text-subtle">{meta}</p>}
+              {(published || readTime) && (
+                <p className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-subtle">
+                  {published && (
+                    <span className="inline-flex items-center gap-1">
+                      <CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />
+                      {published}
+                    </span>
+                  )}
+                  {readTime && (
+                    <span className="inline-flex items-center gap-1">
+                      <Clock className="h-3.5 w-3.5" aria-hidden="true" />
+                      {readTime}
+                    </span>
+                  )}
+                </p>
+              )}
             </div>
           </div>
 
@@ -100,10 +117,12 @@ export default function Post() {
             <LikeButton postId={post.id} initialCount={post.likeCount} />
             {isOwner ? (
               <Button to={`/write/${post.id}`} variant="secondary" size="md">
+                <Pencil className="h-4 w-4" aria-hidden="true" />
                 Edit
               </Button>
             ) : (
               <Button variant="secondary" onClick={() => openReport({ type: "post", id: post.id, name: post.title })}>
+                <Flag className="h-4 w-4" aria-hidden="true" />
                 Report
               </Button>
             )}

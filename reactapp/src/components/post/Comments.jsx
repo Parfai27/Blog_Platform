@@ -1,3 +1,4 @@
+import { Flag, MessageCircle, Send, Trash2 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { useAuth } from "../../context/auth-context"
@@ -96,7 +97,8 @@ export default function Comments({ postId, initialCount, onReport }) {
 
   return (
     <section className="mt-14 border-t border-line pt-10" aria-labelledby="comments-title">
-      <h2 id="comments-title" className="font-serif text-2xl text-ink">
+      <h2 id="comments-title" className="flex items-center gap-2 font-serif text-2xl text-ink">
+        <MessageCircle className="h-5 w-5 text-brand" aria-hidden="true" />
         Comments ({total})
       </h2>
 
@@ -119,6 +121,7 @@ export default function Comments({ postId, initialCount, onReport }) {
               {draft.length}/{COMMENT_MAX}
             </span>
             <Button type="submit" disabled={posting || !draft.trim()}>
+              <Send className="h-4 w-4" aria-hidden="true" />
               {posting ? "Posting..." : "Post comment"}
             </Button>
           </div>
@@ -168,7 +171,8 @@ export default function Comments({ postId, initialCount, onReport }) {
                     </p>
                     <div className="flex gap-3 text-xs">
                       {(mine || isAdmin) && (
-                        <button type="button" onClick={() => remove(comment)} className="font-semibold text-subtle hover:text-danger">
+                        <button type="button" onClick={() => remove(comment)} className="inline-flex items-center gap-1 font-semibold text-subtle hover:text-danger">
+                          <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
                           Delete
                         </button>
                       )}
@@ -176,8 +180,9 @@ export default function Comments({ postId, initialCount, onReport }) {
                         <button
                           type="button"
                           onClick={() => onReport({ type: "comment", id: comment.id, name: "" })}
-                          className="font-semibold text-subtle hover:text-ink"
+                          className="inline-flex items-center gap-1 font-semibold text-subtle hover:text-ink"
                         >
+                          <Flag className="h-3.5 w-3.5" aria-hidden="true" />
                           Report
                         </button>
                       )}
