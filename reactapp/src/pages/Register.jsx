@@ -135,6 +135,11 @@ export default function Register() {
         <Button type="submit" size="lg" disabled={sending} className="mt-1 w-full">
           {sending ? "Creating your account..." : "Create account"}
         </Button>
+        <p className="text-center text-xs leading-5 text-muted">
+          By creating an account you agree to the{" "}
+          <Link to="/terms" className="text-ink underline underline-offset-2">Terms</Link> and confirm you have read the{" "}
+          <Link to="/privacy" className="text-ink underline underline-offset-2">Privacy policy</Link>.
+        </p>
       </form>
     </AuthCard>
   )

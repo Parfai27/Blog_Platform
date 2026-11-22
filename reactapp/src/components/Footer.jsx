@@ -93,9 +93,14 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <p className="mt-5 border-t border-[#f0f1f0] pt-3 text-xs text-subtle">
-          © {new Date().getFullYear()} Open Margin. All rights reserved.
-        </p>
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-2 border-t border-[#f0f1f0] pt-3 text-xs text-subtle">
+          <p>© {new Date().getFullYear()} Open Margin. All rights reserved.</p>
+          <nav aria-label="Legal" className="flex gap-4">
+            <Link to="/privacy" className="hover:text-ink">Privacy</Link>
+            <Link to="/terms" className="hover:text-ink">Terms</Link>
+            <Link to="/cookies" className="hover:text-ink">Cookies</Link>
+          </nav>
+        </div>
       </div>
     </footer>
   )

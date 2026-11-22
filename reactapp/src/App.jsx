@@ -19,6 +19,9 @@ import Post from "./pages/Post"
 import Register from "./pages/Register"
 import Settings from "./pages/Settings"
 import Stories from "./pages/Stories"
+import Cookies from "./pages/legal/Cookies"
+import Privacy from "./pages/legal/Privacy"
+import Terms from "./pages/legal/Terms"
 
 // Every page in the Figma has its address here.
 export default function App() {
@@ -35,6 +38,11 @@ export default function App() {
             <Route path="categories/:slug" element={<Category />} />
             <Route path="authors/:id" element={<Author />} />
             <Route path="about" element={<About />} />
+
+            {/* Legal */}
+            <Route path="privacy" element={<Privacy />} />
+            <Route path="terms" element={<Terms />} />
+            <Route path="cookies" element={<Cookies />} />
 
             {/* Accounts */}
             <Route path="login" element={<Login />} />
